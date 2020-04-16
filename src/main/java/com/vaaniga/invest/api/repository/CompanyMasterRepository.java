@@ -11,4 +11,6 @@ import com.vaaniga.invest.api.model.CompanyMaster;
 public interface CompanyMasterRepository extends JpaRepository<CompanyMaster, Long> {
 
 	List<CompanyMaster> findByCompanyName(String companyName);
+	
+	List<CompanyMaster> findByCategoriesContainingIgnoreCase(String categories);
 }

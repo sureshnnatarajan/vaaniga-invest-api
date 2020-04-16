@@ -13,14 +13,13 @@ import lombok.NoArgsConstructor;
 @Entity
 @NoArgsConstructor
 @AllArgsConstructor
-public class CompanyMaster {
+public class CompanyLikes {
 
 	@Id
 	@GeneratedValue(strategy = GenerationType.AUTO)
 	private Long id;
 	
-	private String companyName;
+	private Long companyId;
 	
-	private String categories;
-	
+	private Long count;
 }
