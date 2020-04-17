@@ -10,3 +10,12 @@ CREATE TABLE `company_master` (
   `count` INT NULL DEFAULT 0,
   PRIMARY KEY (`id`),
   UNIQUE INDEX `company_id_UNIQUE` (`company_id` ASC));
+  
+  CREATE TABLE `company_products` (
+  `id` INT NOT NULL AUTO_INCREMENT,
+  `company_id` INT NOT NULL,
+  `product_name` VARCHAR(1000) NOT NULL,
+  `product_description` VARCHAR(1000) NULL,
+  `product_keywords` VARCHAR(1000) NULL,
+  PRIMARY KEY (`id`),
+  UNIQUE INDEX `product_name_UNIQUE` (`product_name` ASC));

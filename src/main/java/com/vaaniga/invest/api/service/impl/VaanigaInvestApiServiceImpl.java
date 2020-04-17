@@ -10,10 +10,13 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import com.vaaniga.invest.api.dto.CompanyLikesDto;
+import com.vaaniga.invest.api.dto.CompanyProductsDto;
 import com.vaaniga.invest.api.model.CompanyLikes;
 import com.vaaniga.invest.api.model.CompanyMaster;
+import com.vaaniga.invest.api.model.CompanyProducts;
 import com.vaaniga.invest.api.repository.CompanyLikesRepository;
 import com.vaaniga.invest.api.repository.CompanyMasterRepository;
+import com.vaaniga.invest.api.repository.CompanyProductsRepository;
 import com.vaaniga.invest.api.service.VaanigaInvestApiService;
 
 @Service
@@ -23,12 +26,15 @@ public class VaanigaInvestApiServiceImpl implements VaanigaInvestApiService {
 	
 	private CompanyLikesRepository companyLikesRepo;
 	
+	private CompanyProductsRepository companyProductsRepo;
+	
 	@Autowired
 	public VaanigaInvestApiServiceImpl(CompanyMasterRepository companyMasterRepoParam, 
-			CompanyLikesRepository companyLikesRepoParam) {
+			CompanyLikesRepository companyLikesRepoParam, CompanyProductsRepository companyProductsRepoParam) {
 		super();
 		this.companyMasterRepo = companyMasterRepoParam;
 		this.companyLikesRepo = companyLikesRepoParam;
+		this.companyProductsRepo = companyProductsRepoParam;
 	}
 
 	@Override
@@ -98,6 +104,32 @@ public class VaanigaInvestApiServiceImpl implements VaanigaInvestApiService {
 		}
 		
 		return likesListDto;
+	}
+
+	@Override
+	public List<CompanyProductsDto> getProductsForCompany(String companyName) {
+		
+		List<CompanyMaster> companies = companyMasterRepo.findByCompanyName(companyName);
+		
+		List<CompanyProductsDto> productList = new ArrayList<>();
+		
+		if (null == companies || companies.isEmpty()) {
+			return productList;
+		}
+		
+		//access first company
+		List<CompanyProducts> products = companyProductsRepo.findByCompanyId(companies.get(0).getId());
+		
+		if (products == null || products.isEmpty()) {
+			return productList;
+		}
+		
+		for (CompanyProducts product : products) {
+			CompanyProductsDto productDto = new CompanyProductsDto(product, companies.get(0));
+			productList.add(productDto);
+		}
+		
+		return productList;
 	}
 
 }

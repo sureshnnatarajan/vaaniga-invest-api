@@ -15,6 +15,7 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+import com.vaaniga.invest.api.dto.CompanyProductsDto;
 import com.vaaniga.invest.api.model.CompanyMaster;
 import com.vaaniga.invest.api.service.VaanigaInvestApiService;
 
@@ -123,6 +124,33 @@ public class VaanigaInvestApiController {
 		JSONObject entity = new JSONObject();
 		entity.put("result", count);
 		return new ResponseEntity<>(entity.toMap(), HttpStatus.OK);
+	}
+	
+	@GetMapping(value = "/companies/{companyName}/products")
+	public ResponseEntity<Object> getProductsForCompany(@PathVariable String companyName) {
+		long startTime = System.nanoTime();
+		
+		List<CompanyProductsDto> products = this.apiService.getProductsForCompany(companyName);
+
+		JSONObject responseObject = new JSONObject();
+		
+		List<JSONObject> entities = new ArrayList<JSONObject>();
+		
+		for (CompanyProductsDto product : products) {
+			JSONObject entity = new JSONObject();
+	        entity.put("companyName", product.getCompanyName());
+	        entity.put("productName", product.getProductName());
+	        entity.put("productDescription", product.getProductDescription());
+	        entity.put("productKeywords", product.getProductKeywords());
+	        entities.add(entity);
+		}
+		
+		long timeElapsed = System.nanoTime() - startTime;
+		
+		responseObject.put("results", entities);
+		responseObject.put("executionTime", timeElapsed / 1000000 + " milliseconds");
+		
+		return new ResponseEntity<>(responseObject.toMap(), HttpStatus.OK);
 	}
 	
 }
