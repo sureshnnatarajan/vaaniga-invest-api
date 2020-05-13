@@ -1,0 +1,12 @@
+server:
+  servlet:
+    context-path: /vaanigaInvest/
+spring:
+  datasource:
+    password: vaaniga_invadmin
+    url: jdbc:mysql://houseoftexspares.com:3306/vaaniga_invest
+    username: vaaniga_invadmin
+  jpa:
+    hibernate:
+      ddl-auto: none
+      use-new-id-generator-mappings: false
