@@ -12,6 +12,7 @@ import org.springframework.http.HttpEntity;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpMethod;
 import org.springframework.http.ResponseEntity;
+import org.springframework.http.client.SimpleClientHttpRequestFactory;
 import org.springframework.stereotype.Service;
 import org.springframework.util.FileCopyUtils;
 import org.springframework.web.client.RestTemplate;
@@ -31,7 +32,7 @@ public class NseIndiaOptionChainServiceImpl implements NseIndiaOptionChainServic
 		HttpEntity<String> entity = addNseApiHeaders("IN");
 		String url = constructApiEndPointWithSymbol("IN",symbol);
 		
-		ResponseEntity<Resource> equitiesJsonEntity = new RestTemplate().exchange(url, HttpMethod.GET, entity, Resource.class);
+		ResponseEntity<Resource> equitiesJsonEntity = new RestTemplate(getClientHttpRequestFactory()).exchange(url, HttpMethod.GET, entity, Resource.class);
 		JSONObject response = new JSONObject();
 		
 		try {
@@ -42,6 +43,18 @@ public class NseIndiaOptionChainServiceImpl implements NseIndiaOptionChainServic
 			e.printStackTrace();
 		}
 		return response;
+	}
+	
+	//Override timeouts in request factory
+	private SimpleClientHttpRequestFactory getClientHttpRequestFactory() {
+		SimpleClientHttpRequestFactory clientHttpRequestFactory
+	                      = new SimpleClientHttpRequestFactory();
+	    //Connect timeout
+	    clientHttpRequestFactory.setConnectTimeout(10_000);
+	     
+	    //Read timeout
+	    clientHttpRequestFactory.setReadTimeout(10_000);
+	    return clientHttpRequestFactory;
 	}
 
 	@Override
