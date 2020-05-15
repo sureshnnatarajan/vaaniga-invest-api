@@ -19,7 +19,10 @@ import org.springframework.web.client.RestTemplate;
 
 import com.vaaniga.invest.api.service.NseIndiaOptionChainService;
 
+import lombok.extern.slf4j.Slf4j;
+
 @Service
+@Slf4j
 public class NseIndiaOptionChainServiceImpl implements NseIndiaOptionChainService {
 	
 	public static final String _OPTION_CHAIN_INDICES_ENDPOINT_ = "https://www.nseindia.com/api/option-chain-indices?symbol=";
@@ -32,15 +35,17 @@ public class NseIndiaOptionChainServiceImpl implements NseIndiaOptionChainServic
 		HttpEntity<String> entity = addNseApiHeaders("IN");
 		String url = constructApiEndPointWithSymbol("IN",symbol);
 		
+		log.info("fetchOptionChainIndices->URL->"+url);
+		
 		ResponseEntity<Resource> equitiesJsonEntity = new RestTemplate(getClientHttpRequestFactory()).exchange(url, HttpMethod.GET, entity, Resource.class);
 		JSONObject response = new JSONObject();
 		
 		try {
 			GZIPInputStream gzi = new GZIPInputStream(equitiesJsonEntity.getBody().getInputStream());
 			response = new JSONObject(unCompressGzip(gzi));
-			
+			log.info("fetchOptionChainIndices->response->"+response);
 		} catch (IOException e) {
-			e.printStackTrace();
+			log.error(""+e);
 		}
 		return response;
 	}
@@ -50,10 +55,10 @@ public class NseIndiaOptionChainServiceImpl implements NseIndiaOptionChainServic
 		SimpleClientHttpRequestFactory clientHttpRequestFactory
 	                      = new SimpleClientHttpRequestFactory();
 	    //Connect timeout
-	    clientHttpRequestFactory.setConnectTimeout(10_000);
+	    clientHttpRequestFactory.setConnectTimeout(30_000);
 	     
 	    //Read timeout
-	    clientHttpRequestFactory.setReadTimeout(10_000);
+	    clientHttpRequestFactory.setReadTimeout(30_000);
 	    return clientHttpRequestFactory;
 	}
 
