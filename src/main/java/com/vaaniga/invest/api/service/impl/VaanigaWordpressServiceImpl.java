@@ -1,7 +1,6 @@
 package com.vaaniga.invest.api.service.impl;
 
 import org.json.JSONObject;
-import org.springframework.core.io.Resource;
 import org.springframework.http.HttpEntity;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpMethod;

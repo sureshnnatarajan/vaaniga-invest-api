@@ -14,8 +14,10 @@ import com.vaaniga.invest.api.dto.CompanyProductsDto;
 import com.vaaniga.invest.api.model.CompanyLikes;
 import com.vaaniga.invest.api.model.CompanyMaster;
 import com.vaaniga.invest.api.model.CompanyProducts;
+import com.vaaniga.invest.api.model.CompanyProductsKeywords;
 import com.vaaniga.invest.api.repository.CompanyLikesRepository;
 import com.vaaniga.invest.api.repository.CompanyMasterRepository;
+import com.vaaniga.invest.api.repository.CompanyProductsKeywordsRepo;
 import com.vaaniga.invest.api.repository.CompanyProductsRepository;
 import com.vaaniga.invest.api.service.VaanigaInvestApiService;
 
@@ -28,13 +30,17 @@ public class VaanigaInvestApiServiceImpl implements VaanigaInvestApiService {
 	
 	private CompanyProductsRepository companyProductsRepo;
 	
+	private CompanyProductsKeywordsRepo companyProductsKeywordsRepo;
+	
 	@Autowired
 	public VaanigaInvestApiServiceImpl(CompanyMasterRepository companyMasterRepoParam, 
-			CompanyLikesRepository companyLikesRepoParam, CompanyProductsRepository companyProductsRepoParam) {
+			CompanyLikesRepository companyLikesRepoParam, CompanyProductsRepository companyProductsRepoParam,
+			CompanyProductsKeywordsRepo companyProductsKeywordsRepoParam) {
 		super();
 		this.companyMasterRepo = companyMasterRepoParam;
 		this.companyLikesRepo = companyLikesRepoParam;
 		this.companyProductsRepo = companyProductsRepoParam;
+		this.companyProductsKeywordsRepo = companyProductsKeywordsRepoParam;
 	}
 
 	@Override
@@ -130,6 +136,26 @@ public class VaanigaInvestApiServiceImpl implements VaanigaInvestApiService {
 		}
 		
 		return productList;
+	}
+
+	@Override
+	public List<CompanyProductsDto> getCompanyProducts(String companyName) {
+		
+		List<CompanyProductsKeywords> companyProducts = companyProductsKeywordsRepo.findByCompanyNameIgnoreCase(companyName);
+		
+		List<CompanyProductsDto> companyProductsDtoList = new ArrayList<>();
+		
+		if (null == companyProducts) {
+			return companyProductsDtoList;
+		}
+		CompanyProductsDto productDto = null;
+		
+		for(CompanyProductsKeywords products : companyProducts) {
+			productDto = new CompanyProductsDto(products);
+			companyProductsDtoList.add(productDto);
+		}
+		
+		return companyProductsDtoList;
 	}
 
 }

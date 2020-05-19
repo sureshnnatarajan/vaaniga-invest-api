@@ -130,7 +130,9 @@ public class VaanigaInvestApiController {
 	public ResponseEntity<Object> getProductsForCompany(@PathVariable String companyName) {
 		long startTime = System.nanoTime();
 		
-		List<CompanyProductsDto> products = this.apiService.getProductsForCompany(companyName);
+		//List<CompanyProductsDto> products = this.apiService.getProductsForCompany(companyName);
+		
+		List<CompanyProductsDto> products = this.apiService.getCompanyProducts(companyName);
 
 		JSONObject responseObject = new JSONObject();
 		

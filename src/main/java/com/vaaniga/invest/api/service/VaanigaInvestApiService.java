@@ -19,4 +19,6 @@ public interface VaanigaInvestApiService {
 	List<CompanyLikesDto> getLikesForCompanies();
 	
 	List<CompanyProductsDto> getProductsForCompany(String companyName);
+	
+	List<CompanyProductsDto> getCompanyProducts(String companyName);
 }
